@@ -7,12 +7,12 @@ class AboutTab extends React.Component {
         <div className="tab-body">
             <Stack className="settings-about" horizontalAlign="center">
                 <img src="icons/logo.svg" style={{ width: 120, height: 120 }} />
-                <h3 style={{ fontWeight: 600 }}>Fluent Reader</h3>
+                <h3 style={{ fontWeight: 600 }}>Pouch</h3>
                 <small>
                     {intl.get("settings.version")} {window.utils.getVersion()}
                 </small>
                 <p className="settings-hint">
-                    Copyright © 2020 Haoyuan Liu. All rights reserved.
+                    A modern RSS reader - Based on Fluent Reader
                 </p>
                 <Stack
                     horizontal

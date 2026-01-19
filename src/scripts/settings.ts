@@ -13,30 +13,30 @@ let lightTheme: IPartialTheme = {
 let darkTheme: IPartialTheme = {
     ...lightTheme,
     palette: {
-        neutralLighterAlt: "#282828",
-        neutralLighter: "#313131",
-        neutralLight: "#3f3f3f",
-        neutralQuaternaryAlt: "#484848",
-        neutralQuaternary: "#4f4f4f",
-        neutralTertiaryAlt: "#6d6d6d",
-        neutralTertiary: "#c8c8c8",
+        neutralLighterAlt: "#0a0a0a",
+        neutralLighter: "#151515",
+        neutralLight: "#1a1a1a",
+        neutralQuaternaryAlt: "#1f1f1f",
+        neutralQuaternary: "#252525",
+        neutralTertiaryAlt: "#3a3a3a",
+        neutralTertiary: "#c0c0c0",
         neutralSecondary: "#d0d0d0",
-        neutralSecondaryAlt: "#d2d0ce",
-        neutralPrimaryAlt: "#dadada",
+        neutralSecondaryAlt: "#e0e0e0",
+        neutralPrimaryAlt: "#eeeeee",
         neutralPrimary: "#ffffff",
         neutralDark: "#f4f4f4",
         black: "#f8f8f8",
-        white: "#1f1f1f",
-        themePrimary: "#3a96dd",
-        themeLighterAlt: "#020609",
-        themeLighter: "#091823",
-        themeLight: "#112d43",
-        themeTertiary: "#235a85",
-        themeSecondary: "#3385c3",
-        themeDarkAlt: "#4ba0e1",
-        themeDark: "#65aee6",
-        themeDarker: "#8ac2ec",
-        accent: "#3a96dd",
+        white: "#0a0a0a",
+        themePrimary: "#2563eb",
+        themeLighterAlt: "#010408",
+        themeLighter: "#05101f",
+        themeLight: "#091e3b",
+        themeTertiary: "#123c76",
+        themeSecondary: "#1d59ab",
+        themeDarkAlt: "#3b72ee",
+        themeDark: "#5b8af1",
+        themeDarker: "#89abf5",
+        accent: "#60a5fa",
     },
 }
 
@@ -91,7 +91,7 @@ export async function exportAll() {
     const filters = [{ name: intl.get("app.frData"), extensions: ["frdata"] }]
     const write = await window.utils.showSaveDialog(
         filters,
-        "*/Fluent_Reader_Backup.frdata"
+        "*/Pouch_Backup.frdata"
     )
     if (write) {
         let output = window.settings.getAll()
