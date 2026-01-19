@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pouch - RSS Reader Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: #151515;
+            border-bottom: 2px solid #2563eb;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #60a5fa;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #c0c0c0;
+            font-size: 14px;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            margin-top: 20px;
+            min-height: 600px;
+        }
+
+        .sidebar {
+            background: #151515;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #1a1a1a;
+        }
+
+        .sidebar h3 {
+            color: #60a5fa;
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .feed-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #1a1a1a;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .feed-item:hover {
+            background: #1f1f1f;
+            border-left-color: #2563eb;
+        }
+
+        .feed-item.active {
+            background: #1f1f1f;
+            border-left-color: #60a5fa;
+        }
+
+        .feed-name {
+            color: #ffffff;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .feed-count {
+            color: #c0c0c0;
+            font-size: 12px;
+        }
+
+        .content-area {
+            background: #151515;
+            border-radius: 8px;
+            padding: 30px;
+            border: 1px solid #1a1a1a;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .button {
+            background: #1a1a1a;
+            color: #ffffff;
+            border: 1px solid #252525;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .button:hover {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .button.primary {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .button.primary:hover {
+            background: #1d59ab;
+        }
+
+        .article-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .article-card {
+            background: #1a1a1a;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .article-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+
+        .article-title {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .article-meta {
+            color: #c0c0c0;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .article-excerpt {
+            color: #d0d0d0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .color-palette {
+            background: #151515;
+            border-radius: 8px;
+            padding: 30px;
+            margin-top: 20px;
+            border: 1px solid #1a1a1a;
+        }
+
+        .color-palette h2 {
+            color: #60a5fa;
+            margin-bottom: 20px;
+        }
+
+        .colors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .color-swatch {
+            text-align: center;
+        }
+
+        .color-box {
+            height: 80px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #252525;
+        }
+
+        .color-label {
+            font-size: 12px;
+            color: #c0c0c0;
+            margin-bottom: 4px;
+        }
+
+        .color-value {
+            font-size: 11px;
+            color: #3a3a3a;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="95" fill="none" stroke="#60a5fa" stroke-width="4" />
+                <path d="M 60 50 L 90 50 Q 130 50 130 85 Q 130 120 90 120 L 75 120 L 75 150 L 60 150 Z M 75 65 L 75 105 L 90 105 Q 115 105 115 85 Q 115 65 90 65 Z"
+                      fill="none"
+                      stroke="#60a5fa"
+                      stroke-width="8"
+                      stroke-linejoin="round"/>
+                <circle cx="140" cy="60" r="8" fill="none" stroke="#60a5fa" stroke-width="3" />
+            </svg>
+            <div>
+                <h1>Pouch</h1>
+                <div class="subtitle">Modern RSS Reader</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-layout">
+            <div class="sidebar">
+                <h3>Feeds</h3>
+                <div class="feed-item active">
+                    <div class="feed-name">All Items</div>
+                    <div class="feed-count">42 unread</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-name">Tech News</div>
+                    <div class="feed-count">15 unread</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-name">Design Blogs</div>
+                    <div class="feed-count">8 unread</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-name">Development</div>
+                    <div class="feed-count">12 unread</div>
+                </div>
+                <div class="feed-item">
+                    <div class="feed-name">Security</div>
+                    <div class="feed-count">7 unread</div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="toolbar">
+                    <button class="button primary">Refresh</button>
+                    <button class="button">Mark as Read</button>
+                    <button class="button">Settings</button>
+                </div>
+
+                <div class="article-list">
+                    <div class="article-card">
+                        <div class="article-title">Welcome to Pouch - Your Modern RSS Reader</div>
+                        <div class="article-meta">yael.ca • 5 minutes ago</div>
+                        <div class="article-excerpt">
+                            Pouch is a sleek, modern RSS reader with a hacker-inspired dark theme.
+                            Built for self-hosting, it features a beautiful blue and white color scheme
+                            with excellent readability.
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-title">Getting Started with Self-Hosted RSS</div>
+                        <div class="article-meta">Tech Blog • 1 hour ago</div>
+                        <div class="article-excerpt">
+                            Learn how to set up your own RSS reader and take control of your
+                            content consumption. No algorithms, no tracking, just the feeds you choose.
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-title">Dark Theme Best Practices</div>
+                        <div class="article-meta">Design Weekly • 2 hours ago</div>
+                        <div class="article-excerpt">
+                            Creating readable dark themes requires careful attention to contrast
+                            and color choices. Here's how to make dark mode that's easy on the eyes.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="color-palette">
+            <h2>Pouch Color Palette</h2>
+            <div class="colors">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #0a0a0a;"></div>
+                    <div class="color-label">Background</div>
+                    <div class="color-value">#0a0a0a</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #151515;"></div>
+                    <div class="color-label">Surface</div>
+                    <div class="color-value">#151515</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #1a1a1a;"></div>
+                    <div class="color-label">Card</div>
+                    <div class="color-value">#1a1a1a</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #2563eb;"></div>
+                    <div class="color-label">Primary Blue</div>
+                    <div class="color-value">#2563eb</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #60a5fa;"></div>
+                    <div class="color-label">Accent Blue</div>
+                    <div class="color-value">#60a5fa</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #ffffff;"></div>
+                    <div class="color-label">Text</div>
+                    <div class="color-value">#ffffff</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
